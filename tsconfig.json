@@ -1,0 +1,10 @@
+{
+    "compilerOptions": {
+        "esModuleInterop": true,
+        "lib": ["ES2021", "dom"],
+        "target": "ES2021",
+        "moduleResolution": "nodenext",
+        "module": "CommonJS",
+        "outDir": "build"
+    }
+}

@@ -1,0 +1,6 @@
+repos:
+  - repo: https://github.com/homebysix/pre-commit-macadmin
+    rev: v1.12.3
+    hooks:
+      - id: check-git-config-email
+        args: ['--domains', 'proton.me']
