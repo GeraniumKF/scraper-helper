@@ -2,7 +2,8 @@ import { Browser, Page } from "puppeteer";
 
 const USER_AGENT =
   "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.0.0 Safari/537.36";
-const TWEET_SELECTOR = ".main-thread";
+const THREAD_SELECTOR = ".main-thread";
+const SINGLE_TWEET_SELECTOR = ".main-tweet";
 const DEFAULT_TIMEOUT = 10 * 1000;
 const VIEWPORT = {
   width: 1280,
@@ -31,6 +32,7 @@ async function newPage(browser: Browser): Promise<Page> {
 interface TwitterRequest {
   username: string;
   tweetID: string;
+  singleTweet: boolean;
 }
 
 async function screenshot(
@@ -42,7 +44,7 @@ async function screenshot(
 
   try {
     await page.goto(tweetUrl);
-    await page.waitForSelector(TWEET_SELECTOR, { timeout: 10_000 });
+    await page.waitForSelector(THREAD_SELECTOR, { timeout: 10_000 });
 
     // Remove Nitter logo bar above the thread.
     await page.evaluate(() => {
@@ -51,7 +53,9 @@ async function screenshot(
     // Remove Nitter logo bar-related spacing.
     page.addStyleTag({ content: REMOVE_SPACING_CSS });
 
-    const tweet = await page.$(TWEET_SELECTOR);
+    const tweet = info.singleTweet
+      ? await page.$(SINGLE_TWEET_SELECTOR)
+      : await page.$(THREAD_SELECTOR);
     if (tweet === null) {
       throw new Error("Tweet not found.");
     }
